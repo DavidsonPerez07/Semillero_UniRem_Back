@@ -1,0 +1,32 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+        - id: gallery-service
+          uri: lb://gallery-service
+          predicates:
+            - Path=/gallery/**
+        - id: member-service
+          uri: lb://member-service
+          predicates:
+            - Path=/member/**
+        - id: news-service
+          uri: lb://news-service
+          predicates:
+            - Path=/news/**
+        - id: projects-service
+          uri: lb://projects-service
+          predicates:
+            - Path=/projects/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+jwt:
+  secret: jwtsecretkeyforuniremprojectbackend2025
