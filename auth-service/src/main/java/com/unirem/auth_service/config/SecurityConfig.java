@@ -21,13 +21,12 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth -> auth
-                        //.requestMatchers("/auth/login", "/auth/register").permitAll()
-                        //.anyRequest().authenticated()
-                        .anyRequest().permitAll()
-                );
-                //.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                //.formLogin(login -> login.disable())
-                //.httpBasic(basic -> basic.disable());
+                        .requestMatchers("/auth/login", "/auth/register").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin(login -> login.disable())
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }

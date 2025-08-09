@@ -4,16 +4,13 @@ import com.unirem.auth_service.DTO.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.unirem.auth_service.DTO.LoginRequest;
 import com.unirem.auth_service.DTO.LoginResponse;
 import com.unirem.auth_service.DTO.UserDTO;
 import com.unirem.auth_service.service.AuthService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -24,7 +21,7 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    /*@PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @RequestBody LoginRequest request,
             HttpServletResponse response) {
@@ -41,7 +38,7 @@ public class AuthController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok(loginResponse);
-    }*/
+    }
 
     @PostMapping("/register")
     public ResponseEntity<UserDTO> register(@RequestBody RegisterRequest request) {

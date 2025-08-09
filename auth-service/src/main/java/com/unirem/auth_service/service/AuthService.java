@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.unirem.auth_service.DTO.LoginRequest;
 import com.unirem.auth_service.DTO.LoginResponse;
 import com.unirem.auth_service.DTO.UserDTO;
-/*import com.unirem.auth_service.config.JwtUtil;*/
+import com.unirem.auth_service.config.JwtUtil;
 import com.unirem.auth_service.entity.User;
 import com.unirem.auth_service.repository.UserRepository;
 
@@ -18,13 +18,13 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    /*@Autowired
-    private JwtUtil jwtUtil;*/
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /*public LoginResponse login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -37,7 +37,7 @@ public class AuthService {
         LoginResponse response = new LoginResponse();
         response.setToken(token);
         return response;
-    }*/
+    }
 
     public UserDTO register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
