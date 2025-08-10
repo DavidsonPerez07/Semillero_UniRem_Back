@@ -22,7 +22,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
+    public ResponseEntity<String> login(
             @RequestBody LoginRequest request,
             HttpServletResponse response) {
 
@@ -37,7 +37,7 @@ public class AuthController {
 
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok("Login succesful");
     }
 
     @PostMapping("/register")
