@@ -47,7 +47,7 @@ jobs:
             echo "Compiling and analyzing $service..."
             cd $service
             mvn -B clean verify sonar:sonar \
-              -Dsonar.projectKey=$service \
+              -Dsonar.projectKey=DavidsonPerez07_Semillero_UniRem_Back_$service \
               -Dsonar.organization=davidsonperez07-1 \
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.login=$SONAR_TOKEN
