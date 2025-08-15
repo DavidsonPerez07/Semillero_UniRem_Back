@@ -65,7 +65,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                 else if (path.startsWith("/member/")){
                     String role = claims.get("role", String.class);
                     if (!"MEMBER".equals(role)) {
-                        return this.onError(exchange, "Admin role required", HttpStatus.FORBIDDEN);
+                        return this.onError(exchange, "Member role required", HttpStatus.FORBIDDEN);
                     }
                 }
 

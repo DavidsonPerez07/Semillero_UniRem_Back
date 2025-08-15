@@ -5,7 +5,7 @@ import org.mapstruct.factory.Mappers;
 
 import com.unirem.auth_service.DTO.UserDTO;
 import com.unirem.auth_service.entity.User;
-
+//Mapper is not used because MapStruct had some conflicts
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);

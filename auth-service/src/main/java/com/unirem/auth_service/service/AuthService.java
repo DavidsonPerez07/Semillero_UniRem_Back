@@ -1,16 +1,15 @@
 package com.unirem.auth_service.service;
 
-import com.unirem.auth_service.DTO.RegisterRequest;
+import com.unirem.auth_service.DTO.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.unirem.auth_service.DTO.LoginRequest;
-import com.unirem.auth_service.DTO.LoginResponse;
-import com.unirem.auth_service.DTO.UserDTO;
 import com.unirem.auth_service.config.JwtUtil;
 import com.unirem.auth_service.entity.User;
 import com.unirem.auth_service.repository.UserRepository;
+
+import java.util.List;
 
 @Service
 public class AuthService {
@@ -32,7 +31,7 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getUserId());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getUserId(), user.getName(), user.getPhone());
 
         LoginResponse response = new LoginResponse();
         response.setToken(token);
@@ -45,7 +44,7 @@ public class AuthService {
         }
 
         User user = new User();
-        user.setUsername(request.getUsername());
+        user.setName(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("MEMBER");
@@ -54,7 +53,7 @@ public class AuthService {
 
         UserDTO response = new UserDTO();
         response.setUserId(user.getUserId());
-        response.setUsername(user.getUsername());
+        response.setUsername(user.getName());
         response.setEmail(user.getEmail());
         response.setRole(user.getRole());
 

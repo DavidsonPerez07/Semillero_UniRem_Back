@@ -1,14 +1,13 @@
-package com.unirem.auth_service.config;
+package com.unirem.member_service.config;
 
-import java.util.Date;
-
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
 
 @Component
 public class JwtUtil {
@@ -16,19 +15,6 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
     private final long EXPIRATION_TIME = 86400000; // 1 day
-
-    public String generateToken(String email, String role, Long userId, String name, String phone) {
-        return Jwts.builder()
-                .setSubject(email)
-                .claim("role", role)
-                .claim("user id", userId)
-                .claim("name", name)
-                .claim("phone", phone)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes())
-                .compact();
-    }
 
     public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
