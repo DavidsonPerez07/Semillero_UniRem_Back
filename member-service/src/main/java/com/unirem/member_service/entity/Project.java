@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +27,24 @@ public class Project {
     @Column(nullable = false)
     private String status;
     @Column(nullable = false)
-    private String year;
+    private LocalDate creationDate;
+    @Column(nullable = false)
+    private LocalDate endDate;
+    @Column(nullable = false)
+    private String researchArea;
+    @Column(nullable = false)
+    private String researchTopic;
+    @Column(nullable = false)
+    private String identifierArea;
     private String slug;
-    @Lob
-    private byte[] image;
+    @Column(nullable = false)
+    private Boolean isValid;
+    private String imageUrl;
+    private String documentUrl;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "leader_id", referencedColumnName = "user_id")
+    private User leader;
 
     @ManyToMany
     @JoinTable(
@@ -38,8 +53,4 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> researches = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "area_id")
-    private ResearchArea area;
 }

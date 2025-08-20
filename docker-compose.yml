@@ -48,6 +48,25 @@ services:
     networks:
       - semillero-network
 
+  member-service:
+    image: semillerounirem/member-service:latest
+    build:
+      context: ./member-service
+    container_name: member-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.sbhipmgdahsgnhslzksf&password=Semillero2025
+      - SPRING_DATASOURCE_USERNAME=postgres.sbhipmgdahsgnhslzksf
+      - SPRING_DATASOURCE_PASSWORD=Semillero2025
+      - JWT_SECRET=jwtsecretkeyforuniremprojectbackend2025
+      - EUREKA_URI=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+    networks:
+      - semillero-network
+
 networks:
   semillero-network:
     driver: bridge

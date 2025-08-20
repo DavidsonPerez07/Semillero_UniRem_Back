@@ -1,25 +1,30 @@
 package com.unirem.member_service.DTO;
 
-import com.unirem.member_service.entity.ResearchArea;
-import com.unirem.member_service.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectDTO {
+public class ProjectRequest {
     private String tittle;
     private String description;
     private String status;
-    private String year;
+    private LocalDate creationDate;
+    private LocalDate endDate;
+    private String researchArea;
+    private String researchTopic;
+    private String identifierArea;
     private String slug;
-    private byte[] image;
+    private MultipartFile image;
+    private MultipartFile document;
+    private UserDTO leader;
     private List<UserDTO> researches;
-    private ResearchAreaDTO area;
 }

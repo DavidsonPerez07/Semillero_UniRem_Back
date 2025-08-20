@@ -17,11 +17,12 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id
+    @Column(name = "user_id")
     private Long userId;
     private String name;
     private String phone;
     private String email;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "researches")
     private List<Project> projects = new ArrayList<>();
 }
