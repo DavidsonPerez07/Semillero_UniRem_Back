@@ -7,14 +7,19 @@ import com.unirem.member_service.entity.Project;
 import com.unirem.member_service.entity.User;
 import com.unirem.member_service.repository.ProjectRepository;
 import com.unirem.member_service.repository.UserRepository;
-import com.unirem.member_service.utils.FileSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 //Por errores con las librerías de mapeadores se decidió crear los mapeos manualmente
 @Service
@@ -25,8 +30,7 @@ public class MemberService {
     @Autowired
     private UserRepository userRespository;
 
-    @Autowired
-    private FileSaver fileSaver;
+    private final String uploadDir = "uploads/";
 
     public ProjectResponse createProject(ProjectRequest request) {
         Project project = new Project();
@@ -50,8 +54,8 @@ public class MemberService {
         project.setIdentifierArea(request.getIdentifierArea());
         project.setSlug(request.getSlug());
         project.setIsValid(false);
-        project.setImageUrl(fileSaver.save(request.getImage()));
-        project.setDocumentUrl(fileSaver.save(request.getDocument()));
+        project.setImageUrl(saveFile(request.getImage()));
+        project.setDocumentUrl(saveFile(request.getDocument()));
         project.setLeader(user);
         project.getResearches().add(user);
 
@@ -176,5 +180,27 @@ public class MemberService {
                 mapUserDTO(response.getLeader()),
                 users
                 );
+    }
+
+    private String saveFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+
+        try {
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String uniqueName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            Path filePath = uploadPath.resolve(uniqueName);
+
+            file.transferTo(filePath.toFile());
+
+            return "/files/" + uniqueName;
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving file: " + e.getMessage());
+        }
     }
 }
