@@ -1,5 +1,6 @@
 package com.unirem.member_service.utils;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-@Service
+@Component
 public class FileSaver {
     private final String uploadDir = "uploads/";
 
