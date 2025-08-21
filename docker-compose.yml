@@ -67,6 +67,24 @@ services:
     networks:
       - semillero-network
 
+  projects-service:
+    image: semillerounirem/projects-service:latest
+    build:
+      context: ./projects-service
+    container_name: projects-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.sbhipmgdahsgnhslzksf&password=Semillero2025
+      - SPRING_DATASOURCE_USERNAME=postgres.sbhipmgdahsgnhslzksf
+      - SPRING_DATASOURCE_PASSWORD=Semillero2025
+      - EUREKA_URI=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+    networks:
+      - semillero-network
+
 networks:
   semillero-network:
     driver: bridge
