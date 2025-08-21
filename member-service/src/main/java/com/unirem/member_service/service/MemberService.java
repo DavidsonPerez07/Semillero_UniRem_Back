@@ -7,6 +7,7 @@ import com.unirem.member_service.entity.Project;
 import com.unirem.member_service.entity.User;
 import com.unirem.member_service.repository.ProjectRepository;
 import com.unirem.member_service.repository.UserRepository;
+import com.unirem.member_service.utils.FileSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

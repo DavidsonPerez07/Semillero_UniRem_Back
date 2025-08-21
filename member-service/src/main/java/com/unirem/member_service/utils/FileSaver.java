@@ -1,6 +1,5 @@
-package com.unirem.member_service.service;
+package com.unirem.member_service.utils;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
