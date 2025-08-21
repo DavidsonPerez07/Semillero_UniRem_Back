@@ -45,6 +45,7 @@ public class AuthService {
 
         User user = new User();
         user.setName(request.getName());
+        user.setPhone(request.getPhone());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("MEMBER");
@@ -54,6 +55,7 @@ public class AuthService {
         UserDTO response = new UserDTO();
         response.setUserId(user.getUserId());
         response.setName(user.getName());
+        response.setPhone(user.getPhone());
         response.setEmail(user.getEmail());
         response.setRole(user.getRole());
 
