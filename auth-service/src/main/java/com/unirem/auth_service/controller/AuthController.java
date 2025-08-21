@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("http://localhost:3000")
 public class AuthController {
 
     @Autowired
@@ -30,7 +31,8 @@ public class AuthController {
         cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(24 * 60 * 60); // 1 day
-        cookie.setAttribute("SameSite", "Lax");
+        cookie.setAttribute("SameSite", "None");
+        cookie.setSecure(true);
 
         response.addCookie(cookie);
 
