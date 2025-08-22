@@ -22,6 +22,9 @@ public class User {
     private String name;
     private String phone;
     private String email;
+    private String password;
+    private String role;
+
 
     @ManyToMany(mappedBy = "researches")
     private List<Project> projects = new ArrayList<>();

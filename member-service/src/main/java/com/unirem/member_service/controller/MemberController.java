@@ -5,6 +5,7 @@ import com.unirem.member_service.DTO.ProjectResponse;
 import com.unirem.member_service.DTO.UserDTO;
 import com.unirem.member_service.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +17,11 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @PostMapping("/create-project")
-    public ResponseEntity<ProjectResponse> createProject(@RequestBody ProjectRequest request) {
+    @PostMapping(value = "/create-project", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProjectResponse> createProject(@ModelAttribute ProjectRequest request) {
         return ResponseEntity.ok(memberService.createProject(request));
     }
+
 
     @PostMapping("/add-user-to-project")
     public ResponseEntity<?> addUserToProject(@RequestParam Long projectId, @RequestBody UserDTO userDTO) {

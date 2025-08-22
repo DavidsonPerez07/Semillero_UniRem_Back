@@ -107,6 +107,8 @@ public class MemberService {
                 user.getName(),
                 user.getEmail(),
                 user.getPhone(),
+                user.getPassword(),
+                user.getRole(),
                 projectsResponse
             );
     }
@@ -120,10 +122,13 @@ public class MemberService {
         return new User(
                 userDTO.getUserId(),
                 userDTO.getName(),
-                userDTO.getEmail(),
                 userDTO.getPhone(),
+                userDTO.getEmail(),
+                userDTO.getPassword(),
+                userDTO.getRole(),
                 projects
-            );
+        );
+
     }
 
     private ProjectResponse mapProject(Project project) {
