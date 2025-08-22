@@ -31,4 +31,6 @@ public class User {
     private String password;
     @Column(nullable = false)
     private String role;
+    @Column(nullable = false)
+    private boolean valid;
 }

@@ -36,12 +36,23 @@ public class AuthController {
 
         response.addCookie(cookie);
 
-        return ResponseEntity.ok("Login succesful");
+        return ResponseEntity.ok("Login successful");
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
         UserDTO createdUser = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        return ResponseEntity.ok("User create successfully");
     }
-}
+
+    @GetMapping("/user")
+    public ResponseEntity<UserDTO> getUser(@CookieValue(name = "jwt", required = false) String token) {
+        if (token == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        UserDTO user = authService.getUserFromToken(token);
+        return ResponseEntity.ok(user);
+    }
+
+}   
