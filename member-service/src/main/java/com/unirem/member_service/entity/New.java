@@ -1,10 +1,12 @@
-package com.unirem.projects_service.entity;
+package com.unirem.member_service.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -22,4 +24,16 @@ public class New {
     private String excerpt;
     @Column(nullable = false)
     private String content;
+    @Enumerated(EnumType.STRING)
+    private NewCategory category;
+    @Column(nullable = false)
+    private LocalDate date;
+    private String imageUrl;
+    private String slug;
+    @Column(nullable = false)
+    private Boolean isValid;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "author_id", referencedColumnName = "user_id")
+    private User author;
 }
