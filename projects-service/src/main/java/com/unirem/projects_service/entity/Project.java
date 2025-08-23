@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "projects")
 public class Project {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long projectId;
     @Column(nullable = false)
     private String tittle;

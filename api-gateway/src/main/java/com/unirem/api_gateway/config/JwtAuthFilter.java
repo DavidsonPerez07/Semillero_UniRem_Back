@@ -31,7 +31,8 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             String path = exchange.getRequest().getURI().getPath();
             
             if (path.startsWith("/auth/") || path.startsWith("/gallery") ||
-            path.startsWith("/news/") || path.startsWith("/projects")) {
+            path.startsWith("/news/") || path.startsWith("/projects")
+            || path.startsWith("/member/")) {
                 return chain.filter(exchange);
             }
 
@@ -62,15 +63,15 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                         return this.onError(exchange, "Admin role required", HttpStatus.FORBIDDEN);
                     }
                 }
-                else if (path.startsWith("/member/")){
+                /*else if (path.startsWith("/member/")){
                     String role = claims.get("role", String.class);
                     if (!"MEMBER".equals(role)) {
                         return this.onError(exchange, "Member role required", HttpStatus.FORBIDDEN);
                     }
-                }
+                }*/
 
                 exchange.getRequest().mutate()
-                        .header("userId", claims.getSubject())
+                        .header("userId", String.valueOf(claims.get("userId", Long.class)))
                         .header("role", claims.get("role", String.class))
                         .build();
 
