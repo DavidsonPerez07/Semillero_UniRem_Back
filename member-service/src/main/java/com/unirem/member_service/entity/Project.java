@@ -10,45 +10,59 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "projects")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "projects")
 public class Project {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long projectId;
+
     @Column(nullable = false)
     private String tittle;
+
     @Column(nullable = false)
     private String description;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "leader_id", referencedColumnName = "user_id")
-    private User leader;
-    @ManyToMany
-    @JoinTable(
-            name = "project_members",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+
+    @Column(name = "leader_id", nullable = false)
+    private Long leaderId;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "project_researchers",
+            joinColumns = @JoinColumn(name = "project_id")
     )
-    private List<User> researches;
+    @Column(name = "researcher_id")
+    private List<Long> researcherIds = new ArrayList<>();
+
     @Column(nullable = false)
     private String status;
+
     @Column(nullable = false)
-    private LocalDate creationDate;
+    private String creationDate;
+
     @Column(nullable = false)
-    private LocalDate endDate;
+    private String endDate;
+
     @Column(nullable = false)
     private String researchArea;
+
     @Column(nullable = false)
     private String researchTopic;
+
     @Column(nullable = false)
     private String identifierArea;
+
     private String slug;
+
     @Column(nullable = false)
     private Boolean valid;
+
     private String imageUrl;
     private String documentUrl;
 }
+
