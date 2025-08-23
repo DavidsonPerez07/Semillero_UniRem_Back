@@ -86,7 +86,6 @@ public class MemberService {
         }
     }
 
-
     public void approveProject(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
@@ -96,20 +95,68 @@ public class MemberService {
         projectRepository.save(project);
     }
 
-    public NewsDTO createNews(NewsRequest newsRequest) {
+    public List<ProjectDTO> getAllProjects() {
+        return projectRepository.findAll().stream()
+                .map(this::projectToProjectDTO)
+                .toList();
+    }
+
+    public List<ProjectDTO> getValidProjects() {
+        return projectRepository.findByValidTrue().stream()
+                .map(this::projectToProjectDTO)
+                .toList();
+    }
+
+    public ProjectDTO editProject(Long projectId, ProjectRequest request, MultipartFile image,
+                                  MultipartFile document) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        project.setTittle(request.getTittle());
+        project.setDescription(request.getDescription());
+
+        // solo guardamos IDs
+        project.setLeaderId(request.getLeaderId());
+        project.setResearcherIds(request.getResearchesIds());
+
+        project.setStatus(request.getStatus());
+        project.setCreationDate(request.getCreationDate());
+        project.setEndDate(request.getEndDate());
+        project.setResearchArea(request.getResearchArea());
+        project.setResearchTopic(request.getResearchTopic());
+        project.setIdentifierArea(request.getIdentifierArea());
+        project.setSlug(request.getSlug());
+
+        if (image != null && !image.isEmpty()) {
+            project.setImageUrl(saveFile(image, uploadProjectDir));
+        }
+        if (document != null && !document.isEmpty()) {
+            project.setDocumentUrl(saveFile(document, uploadProjectDir));
+        }
+
+        project = projectRepository.save(project);
+
+        return projectToProjectDTO(project);
+    }
+
+    public void deleteProject(Long projectId) {
+        projectRepository.deleteById(projectId);
+    }
+
+    public NewsDTO createNews(NewsRequest newsRequest, MultipartFile image) {
         News news = new News();
-        User user = userRespository.findById(newsRequest.getAuthor().getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
         news.setTittle(newsRequest.getTittle());
         news.setExcerpt(newsRequest.getExcerpt());
         news.setContent(newsRequest.getContent());
         news.setCategory(newsRequest.getCategory());
         news.setDate(newsRequest.getDate());
-        news.setImageUrl(saveFile(newsRequest.getImage(), uploadNewsDir));
-        news.setAuthor(user);
+        news.setAuthorId(newsRequest.getAuthorId());
         news.setSlug(newsRequest.getSlug());
-        news.setValid(false);
+
+        if (image != null && !image.isEmpty()) {
+            news.setImageUrl(saveFile(newsRequest.getImage(), uploadNewsDir));
+        }
 
         news = newsRepository.save(news);
 
@@ -125,22 +172,86 @@ public class MemberService {
         newsRepository.save(news);
     }
 
-    public GalleryImageDTO createGalleryImage(GalleryImageRequest galleryImageRequest) {
+    public List<NewsDTO> getAllNews() {
+        return newsRepository.findAll().stream()
+                .map(this::newsToNewsDTO)
+                .toList();
+    }
+
+    public List<NewsDTO> getValidNews() {
+        return newsRepository.findByValidTrue().stream()
+                .map(this::newsToNewsDTO)
+                .toList();
+    }
+
+    public NewsDTO editNews(Long newsId, NewsRequest request, MultipartFile image) {
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new RuntimeException("News not found"));
+
+        news.setTittle(request.getTittle());
+        news.setExcerpt(request.getExcerpt());
+        news.setContent(request.getContent());
+        news.setCategory(request.getCategory());
+        news.setDate(request.getDate());
+        news.setAuthorId(request.getAuthorId());
+        news.setSlug(request.getSlug());
+
+        if (image != null && !image.isEmpty()) {
+            news.setImageUrl(saveFile(request.getImage(), uploadNewsDir));
+        }
+
+        news = newsRepository.save(news);
+
+        return newsToNewsDTO(news);
+    }
+
+    public void deleteNews(Long newsId) {
+        newsRepository.deleteById(newsId);
+    }
+
+    public GalleryImageDTO createGalleryImage(GalleryImageRequest galleryImageRequest, MultipartFile image) {
         GalleryImage galleryImage = new GalleryImage();
 
         galleryImage.setTittle(galleryImageRequest.getTittle());
         galleryImage.setDescription(galleryImageRequest.getDescription());
-        galleryImage.setImageUrl(saveFile(galleryImageRequest.getImage(), uploadGalleryDir));
+
+        if (image != null && !image.isEmpty()) {
+            galleryImage.setImageUrl(saveFile(galleryImageRequest.getImage(), uploadNewsDir));
+        }
+
+        return galleryImageToGalleryImageDTO(galleryImage);
+    }
+
+    public List<GalleryImageDTO> getAllGalleryImages() {
+        return galleryImageRepository.findAll().stream()
+                .map(this::galleryImageToGalleryImageDTO)
+                .toList();
+    }
+
+    public GalleryImageDTO editGalleryImage(Long galleryImageId, GalleryImageRequest request) {
+        GalleryImage galleryImage = galleryImageRepository.findById(galleryImageId)
+                .orElseThrow(() -> new RuntimeException("Gallery image not found"));
+
+        galleryImage.setTittle(request.getTittle());
+        galleryImage.setDescription(request.getDescription());
 
         galleryImage = galleryImageRepository.save(galleryImage);
 
         return galleryImageToGalleryImageDTO(galleryImage);
     }
 
+    public void deleteGalleryImage(Long galleryImageId) {
+        newsRepository.deleteById(galleryImageId);
+    }
+
     public List<UserDTO> getAllUsers() {
         return userRespository.findAll().stream()
                 .map(this::userToUserDTO)
                 .toList();
+    }
+
+    public void deleteUser(Long userId) {
+        userRespository.deleteById(userId);
     }
 
     private ProjectDTO projectToProjectDTO(Project project) {

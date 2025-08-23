@@ -25,13 +25,13 @@ public class News {
     @Column(nullable = false)
     private String content;
     @Enumerated(EnumType.STRING)
-    private NewCategory category;
+    private NewsCategory category;
     @Column(nullable = false)
     private LocalDate date;
     private String imageUrl;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "author_id", referencedColumnName = "user_id")
-    private User author;
+    private Long authorId;
     private String slug;
     @Column(nullable = false)
     private Boolean valid;

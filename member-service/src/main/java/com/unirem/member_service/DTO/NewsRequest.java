@@ -1,6 +1,6 @@
 package com.unirem.member_service.DTO;
 
-import com.unirem.member_service.entity.NewCategory;
+import com.unirem.member_service.entity.NewsCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +17,9 @@ public class NewsRequest {
     private String tittle;
     private String excerpt;
     private String content;
-    private NewCategory category;
+    private NewsCategory category;
     private LocalDate date;
     private MultipartFile image;
-    private UserDTO author;
+    private Long authorId;
     private String slug;
 }

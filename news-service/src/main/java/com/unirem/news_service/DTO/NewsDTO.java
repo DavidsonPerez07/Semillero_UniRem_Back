@@ -1,6 +1,6 @@
 package com.unirem.news_service.DTO;
 
-import com.unirem.news_service.entity.NewCategory;
+import com.unirem.news_service.entity.NewsCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,15 +12,15 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NewDTO {
+public class NewsDTO {
     private Long newId;
     private String tittle;
     private String excerpt;
     private String content;
-    private NewCategory category;
+    private NewsCategory category;
     private LocalDate date;
     private String imageUrl;
+    private Long authorId;
     private String slug;
-    private Boolean isValid;
-    private UserDTO author;
+    private Boolean valid;
 }

@@ -1,6 +1,6 @@
 package com.unirem.news_service.entity;
 
-public enum NewCategory {
+public enum NewsCategory {
     PUBLICATION,
     EVENT,
     AWARDS,
