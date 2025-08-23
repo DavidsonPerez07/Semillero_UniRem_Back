@@ -42,15 +42,16 @@ public class MemberService {
     private final String uploadNewsDir = "uploads/news/";
     private final String uploadGalleryDir = "uploads/gallery/";
 
-    public ProjectDTO createProject(ProjectRequest request) {
+    public ProjectDTO createProject(ProjectRequest request, MultipartFile image, MultipartFile document) {
         Project project = new Project();
-        User user = userRespository.findById(request.getLeader().getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
         project.setTittle(request.getTittle());
         project.setDescription(request.getDescription());
-        project.setLeader(user);
-        project.getResearches().add(user);
+
+        // solo guardamos IDs
+        project.setLeaderId(request.getLeaderId());
+        project.setResearcherIds(request.getResearchesIds());
+
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
         project.setEndDate(request.getEndDate());
@@ -59,25 +60,32 @@ public class MemberService {
         project.setIdentifierArea(request.getIdentifierArea());
         project.setSlug(request.getSlug());
         project.setValid(false);
-        project.setImageUrl(saveFile(request.getImage(), uploadProjectDir));
-        project.setDocumentUrl(saveFile(request.getDocument(), uploadProjectDir));
+
+
+        if (image != null && !image.isEmpty()) {
+            project.setImageUrl(saveFile(image, uploadProjectDir));
+        }
+        if (document != null && !document.isEmpty()) {
+            project.setDocumentUrl(saveFile(document, uploadProjectDir));
+        }
 
         project = projectRepository.save(project);
 
         return projectToProjectDTO(project);
     }
 
-    public void addUserToProject(Long projectId, UserDTO userDTO) {
+
+
+    public void addUserToProject(Long projectId, Long userId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        User user = userRespository.findById(userDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        project.getResearches().add(user);
-
-        projectRepository.save(project);
+        if (!project.getResearcherIds().contains(userId)) {
+            project.getResearcherIds().add(userId);
+            projectRepository.save(project);
+        }
     }
+
 
     public void approveProject(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -157,7 +165,12 @@ public class MemberService {
         }
 
         try {
-            Path uploadPath = Paths.get(specificDir);
+            // Obtiene la raíz del proyecto
+            String projectRoot = System.getProperty("user.dir");
+
+            // Carpeta donde guardar (ejemplo: src/main/resources/uploads/projects)
+            Path uploadPath = Paths.get(projectRoot, "src", "main", "resources", specificDir);
+
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
@@ -167,9 +180,11 @@ public class MemberService {
 
             file.transferTo(filePath.toFile());
 
+            // Puedes devolver una URL relativa o el path real
             return "/files/" + uniqueName;
         } catch (IOException e) {
-            throw new RuntimeException("Error saving file: " + e.getMessage());
+            throw new RuntimeException("Error saving file: " + e.getMessage(), e);
         }
     }
+
 }

@@ -1,11 +1,15 @@
 package com.unirem.member_service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unirem.member_service.DTO.*;
+import com.unirem.member_service.entity.Project;
 import com.unirem.member_service.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,10 +19,20 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @PostMapping(value = "/create-project", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProjectDTO> createProject(@ModelAttribute ProjectRequest request) {
-        return ResponseEntity.ok(memberService.createProject(request));
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProjectDTO> createProject(
+            @RequestParam("data") String data,
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "document", required = false) MultipartFile document) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        ProjectRequest request = mapper.readValue(data, ProjectRequest.class);
+
+        ProjectDTO project = memberService.createProject(request, image, document);
+        return ResponseEntity.ok(project);
     }
+
+
 
     @PutMapping("/add-user-to-project")
     public ResponseEntity<?> addUserToProject(@RequestParam Long projectId, @RequestBody UserDTO userDTO) {

@@ -16,11 +16,11 @@ import java.util.List;
 public class ProjectRequest {
     private String tittle;
     private String description;
-    private UserDTO leader;
-    private List<UserDTO> researches;
+    private Long leaderId;
+    private List<Long> researchesIds;
     private String status;
-    private LocalDate creationDate;
-    private LocalDate endDate;
+    private String creationDate;
+    private String endDate;
     private String researchArea;
     private String researchTopic;
     private String identifierArea;
