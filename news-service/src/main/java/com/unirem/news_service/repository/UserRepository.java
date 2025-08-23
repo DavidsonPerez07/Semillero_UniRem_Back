@@ -1,6 +1,6 @@
-package com.unirem.member_service.repository;
+package com.unirem.news_service.repository;
 
-import com.unirem.member_service.entity.User;
+import com.unirem.news_service.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    public Optional<User> findByEmail(String email);
-    public boolean existsByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

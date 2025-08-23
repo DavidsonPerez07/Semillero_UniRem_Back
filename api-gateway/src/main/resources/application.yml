@@ -2,10 +2,10 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: auth-service
-          uri: lb://auth-service
+        - id: news-service
+          uri: lb://news-service
           predicates:
-            - Path=/auth/**
+            - Path=/news/**
         - id: gallery-service
           uri: lb://gallery-service
           predicates:
@@ -14,10 +14,6 @@ spring:
           uri: lb://member-service
           predicates:
             - Path=/member/**
-        - id: news-service
-          uri: lb://news-service
-          predicates:
-            - Path=/news/**
         - id: projects-service
           uri: lb://projects-service
           predicates:

@@ -1,5 +1,6 @@
-package com.unirem.member_service.DTO;
+package com.unirem.news_service.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,19 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    @Column(name = "user_id")
     private Long userId;
     private String name;
     private String phone;
     private String email;
-    private String role;
     private String password;
-    private Boolean valid;
+    private String role;
+
+
+    @ManyToMany(mappedBy = "researches")
+    private List<Project> projects = new ArrayList<>();
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectRequest {
+public class ProjectDTO {
+    private Long projectId;
     private String tittle;
     private String description;
     private UserDTO leader;
@@ -25,6 +25,7 @@ public class ProjectRequest {
     private String researchTopic;
     private String identifierArea;
     private String slug;
-    private MultipartFile image;
-    private MultipartFile document;
+    private Boolean valid;
+    private String imageUrl;
+    private String documentUrl;
 }

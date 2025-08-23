@@ -17,15 +17,18 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id
-    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
+    @Column(nullable = false, unique = true)
     private String name;
+    @Column(nullable = false)
     private String phone;
+    @Column(nullable = false, unique = true)
     private String email;
-    private String password;
+    @Column(nullable = false)
     private String role;
-
-
-    @ManyToMany(mappedBy = "researches")
-    private List<Project> projects = new ArrayList<>();
+    @Column(nullable = false)
+    private String password;
+    @Column(nullable = false)
+    private boolean valid;
 }

@@ -30,7 +30,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
             String token = null;
             String path = exchange.getRequest().getURI().getPath();
             
-            if (path.startsWith("/auth/") || path.startsWith("/gallery") ||
+            if (path.startsWith("/gallery") ||
             path.startsWith("/news/") || path.startsWith("/projects")
             || path.startsWith("/member/")) {
                 return chain.filter(exchange);

@@ -1,12 +1,15 @@
 package com.unirem.member_service.service;
 
-import com.unirem.member_service.DTO.ProjectRequest;
-import com.unirem.member_service.DTO.ProjectResponse;
-import com.unirem.member_service.DTO.UserDTO;
+import com.unirem.member_service.DTO.*;
+import com.unirem.member_service.entity.GalleryImage;
+import com.unirem.member_service.entity.News;
 import com.unirem.member_service.entity.Project;
 import com.unirem.member_service.entity.User;
+import com.unirem.member_service.repository.GalleryImageRepository;
+import com.unirem.member_service.repository.NewsRepository;
 import com.unirem.member_service.repository.ProjectRepository;
 import com.unirem.member_service.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,13 +18,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//Por errores con las librerías de mapeadores se decidió crear los mapeos manualmente
 @Service
 public class MemberService {
     @Autowired
@@ -30,22 +29,28 @@ public class MemberService {
     @Autowired
     private UserRepository userRespository;
 
-    private final String uploadDir = "uploads/";
+    @Autowired
+    private NewsRepository newsRepository;
 
-    public ProjectResponse createProject(ProjectRequest request) {
+    @Autowired
+    private GalleryImageRepository galleryImageRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    private final String uploadProjectDir = "uploads/projects/";
+    private final String uploadNewsDir = "uploads/news/";
+    private final String uploadGalleryDir = "uploads/gallery/";
+
+    public ProjectDTO createProject(ProjectRequest request) {
         Project project = new Project();
         User user = userRespository.findById(request.getLeader().getUserId())
-                .orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setUserId(request.getLeader().getUserId());
-                    newUser.setName(request.getLeader().getName());
-                    newUser.setEmail(request.getLeader().getEmail());
-                    newUser.setPhone(request.getLeader().getPhone());
-                    return userRespository.save(newUser);
-                });
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         project.setTittle(request.getTittle());
         project.setDescription(request.getDescription());
+        project.setLeader(user);
+        project.getResearches().add(user);
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
         project.setEndDate(request.getEndDate());
@@ -53,17 +58,13 @@ public class MemberService {
         project.setResearchTopic(request.getResearchTopic());
         project.setIdentifierArea(request.getIdentifierArea());
         project.setSlug(request.getSlug());
-        project.setIsValid(false);
-        project.setImageUrl(saveFile(request.getImage()));
-        project.setDocumentUrl(saveFile(request.getDocument()));
-        project.setLeader(user);
-        project.getResearches().add(user);
-
-        user.getProjects().add(project);
+        project.setValid(false);
+        project.setImageUrl(saveFile(request.getImage(), uploadProjectDir));
+        project.setDocumentUrl(saveFile(request.getDocument(), uploadProjectDir));
 
         project = projectRepository.save(project);
 
-        return mapProject(project);
+        return projectToProjectDTO(project);
     }
 
     public void addUserToProject(Long projectId, UserDTO userDTO) {
@@ -71,18 +72,9 @@ public class MemberService {
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
         User user = userRespository.findById(userDTO.getUserId())
-                .orElseGet(() -> {
-                    User newUser = new User();
-                    newUser.setUserId(userDTO.getUserId());
-                    newUser.setName(userDTO.getName());
-                    newUser.setEmail(userDTO.getEmail());
-                    newUser.setPhone(userDTO.getPhone());
-                    return userRespository.save(newUser);
-                });
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         project.getResearches().add(user);
-
-        user.getProjects().add(project);
 
         projectRepository.save(project);
     }
@@ -91,109 +83,81 @@ public class MemberService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        project.setIsValid(true);
+        project.setValid(true);
 
         projectRepository.save(project);
     }
 
-    private UserDTO mapUser(User user) {
-        List<ProjectResponse> projectsResponse = new ArrayList<>();
-        for (Project project : user.getProjects()) {
-            projectsResponse.add(mapProject(project));
-        }
+    public NewsDTO createNews(NewsRequest newsRequest) {
+        News news = new News();
+        User user = userRespository.findById(newsRequest.getAuthor().getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new UserDTO(
-                user.getUserId(),
-                user.getName(),
-                user.getEmail(),
-                user.getPhone(),
-                user.getPassword(),
-                user.getRole(),
-                projectsResponse
-            );
+        news.setTittle(newsRequest.getTittle());
+        news.setExcerpt(newsRequest.getExcerpt());
+        news.setContent(newsRequest.getContent());
+        news.setCategory(newsRequest.getCategory());
+        news.setDate(newsRequest.getDate());
+        news.setImageUrl(saveFile(newsRequest.getImage(), uploadNewsDir));
+        news.setAuthor(user);
+        news.setSlug(newsRequest.getSlug());
+        news.setValid(false);
+
+        news = newsRepository.save(news);
+
+        return newsToNewsDTO(news);
     }
 
-    private User mapUserDTO(UserDTO userDTO) {
-        List<Project> projects = new ArrayList<>();
-        for (ProjectResponse projectResponse : userDTO.getProjects()) {
-            projects.add(mapProjectResponse(projectResponse));
-        }
+    public void approveNews(Long newsId) {
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new RuntimeException("News not found"));
 
-        return new User(
-                userDTO.getUserId(),
-                userDTO.getName(),
-                userDTO.getPhone(),
-                userDTO.getEmail(),
-                userDTO.getPassword(),
-                userDTO.getRole(),
-                projects
-        );
+        news.setValid(true);
 
+        newsRepository.save(news);
     }
 
-    private ProjectResponse mapProject(Project project) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public GalleryImageDTO createGalleryImage(GalleryImageRequest galleryImageRequest) {
+        GalleryImage galleryImage = new GalleryImage();
 
-        List<UserDTO> usersDTO = new ArrayList<>();
-        for (User user : project.getResearches()) {
-            usersDTO.add(mapUser(user));
-        }
+        galleryImage.setTittle(galleryImageRequest.getTittle());
+        galleryImage.setDescription(galleryImageRequest.getDescription());
+        galleryImage.setImageUrl(saveFile(galleryImageRequest.getImage(), uploadGalleryDir));
 
-        return new ProjectResponse(
-                project.getProjectId(),
-                project.getTittle(),
-                project.getDescription(),
-                project.getStatus(),
-                project.getCreationDate().format(formatter),
-                project.getEndDate().format(formatter),
-                project.getResearchArea(),
-                project.getResearchTopic(),
-                project.getIdentifierArea(),
-                project.getSlug(),
-                project.getIsValid(),
-                project.getImageUrl(),
-                project.getDocumentUrl(),
-                mapUser(project.getLeader()),
-                usersDTO
-        );
+        galleryImage = galleryImageRepository.save(galleryImage);
+
+        return galleryImageToGalleryImageDTO(galleryImage);
     }
 
-    private Project mapProjectResponse(ProjectResponse response) {
-        List<User> users = new ArrayList<>();
-        for (UserDTO userDTO : response.getResearches()) {
-            users.add(mapUserDTO(userDTO));
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate creationDate = LocalDate.parse(response.getCreationDate(), formatter);
-        LocalDate endDate = LocalDate.parse(response.getEndDate(), formatter);
-
-        return new Project(
-                response.getProjectId(),
-                response.getTittle(),
-                response.getDescription(),
-                response.getStatus(),
-                creationDate,
-                endDate,
-                response.getResearchArea(),
-                response.getResearchTopic(),
-                response.getIdentifierArea(),
-                response.getSlug(),
-                response.getIsValid(),
-                response.getImageUrl(),
-                response.getDocumentUrl(),
-                mapUserDTO(response.getLeader()),
-                users
-                );
+    public List<UserDTO> getAllUsers() {
+        return userRespository.findAll().stream()
+                .map(this::userToUserDTO)
+                .toList();
     }
 
-    private String saveFile(MultipartFile file) {
+    private ProjectDTO projectToProjectDTO(Project project) {
+        return modelMapper.map(project, ProjectDTO.class);
+    }
+
+    private NewsDTO newsToNewsDTO(News news) {
+        return modelMapper.map(news, NewsDTO.class);
+    }
+
+    private GalleryImageDTO galleryImageToGalleryImageDTO(GalleryImage galleryImage) {
+        return modelMapper.map(galleryImage, GalleryImageDTO.class);
+    }
+
+    private UserDTO userToUserDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    private String saveFile(MultipartFile file, String specificDir) {
         if (file == null || file.isEmpty()) {
             return null;
         }
 
         try {
-            Path uploadPath = Paths.get(uploadDir);
+            Path uploadPath = Paths.get(specificDir);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
