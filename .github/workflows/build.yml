@@ -54,6 +54,15 @@ jobs:
             cd ..
           done
 
+      - name: Build non-tested services (discovery, gateway)
+        run: |
+          for service in discovery-server api-gateway; do
+            echo "Packaging $service..."
+            cd $service
+            mvn -B clean package -DskipTests
+            cd ..
+          done
+
       # 5. Build Docker images (todos los servicios)
       - name: Build Docker images
         run: |
