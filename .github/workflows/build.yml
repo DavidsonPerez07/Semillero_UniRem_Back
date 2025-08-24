@@ -77,3 +77,4 @@ jobs:
           for service in discovery-server api-gateway gallery-service member-service news-service projects-service; do
             docker push ${{ secrets.DOCKER_USERNAME }}/$service:latest
           done
+
