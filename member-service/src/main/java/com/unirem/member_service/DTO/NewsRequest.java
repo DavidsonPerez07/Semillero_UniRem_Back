@@ -18,8 +18,9 @@ public class NewsRequest {
     private String excerpt;
     private String content;
     private NewsCategory category;
-    private LocalDate date;
+    private String date;
     private MultipartFile image;
     private Long authorId;
     private String slug;
+    private Boolean valid;
 }

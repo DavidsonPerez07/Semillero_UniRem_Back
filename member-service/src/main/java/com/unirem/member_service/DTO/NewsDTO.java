@@ -18,7 +18,7 @@ public class NewsDTO {
     private String excerpt;
     private String content;
     private NewsCategory category;
-    private LocalDate date;
+    private String date;
     private String imageUrl;
     private Long authorId;
     private String slug;

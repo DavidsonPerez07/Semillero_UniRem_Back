@@ -153,9 +153,10 @@ public class MemberService {
         news.setDate(newsRequest.getDate());
         news.setAuthorId(newsRequest.getAuthorId());
         news.setSlug(newsRequest.getSlug());
+        news.setValid(false);
 
         if (image != null && !image.isEmpty()) {
-            news.setImageUrl(saveFile(newsRequest.getImage(), uploadNewsDir));
+            news.setImageUrl(saveFile(image, uploadNewsDir));
         }
 
         news = newsRepository.save(news);
@@ -276,26 +277,30 @@ public class MemberService {
         }
 
         try {
-            // Obtiene la raíz del proyecto
+            // Raíz del proyecto (donde está pom.xml)
             String projectRoot = System.getProperty("user.dir");
 
-            // Carpeta donde guardar (ejemplo: src/main/resources/uploads/projects)
-            Path uploadPath = Paths.get(projectRoot, "src", "main", "resources", specificDir);
+            // Carpeta de uploads (ej: /uploads/projects)
+            Path uploadPath = Paths.get(projectRoot, "uploads", specificDir);
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
+            // Nombre único para evitar colisiones
             String uniqueName = UUID.randomUUID() + "-" + file.getOriginalFilename();
             Path filePath = uploadPath.resolve(uniqueName);
 
+            // Guardar el archivo en el sistema de archivos
             file.transferTo(filePath.toFile());
 
-            // Puedes devolver una URL relativa o el path real
+            // Retornamos una ruta relativa (puedes mapearla con un controller para servir archivos)
             return "/files/" + uniqueName;
+
         } catch (IOException e) {
             throw new RuntimeException("Error saving file: " + e.getMessage(), e);
         }
     }
+
 
 }

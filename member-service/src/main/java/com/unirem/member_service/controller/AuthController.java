@@ -28,7 +28,7 @@ public class AuthController {
 
         Cookie cookie = new Cookie("jwt", loginResponse.getToken());
         cookie.setHttpOnly(true);
-        cookie.setSecure(false);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(24 * 60 * 60); // 1 day
         cookie.setAttribute("SameSite", "None");
