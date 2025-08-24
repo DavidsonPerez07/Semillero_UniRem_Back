@@ -218,6 +218,8 @@ public class MemberService {
             galleryImage.setImageUrl(saveFile(galleryImageRequest.getImage(), uploadNewsDir));
         }
 
+        galleryImage = galleryImageRepository.save(galleryImage);
+
         return galleryImageToGalleryImageDTO(galleryImage);
     }
 
@@ -240,7 +242,7 @@ public class MemberService {
     }
 
     public void deleteGalleryImage(Long galleryImageId) {
-        newsRepository.deleteById(galleryImageId);
+        galleryImageRepository.deleteById(galleryImageId);
     }
 
     public List<UserDTO> getAllUsers() {
