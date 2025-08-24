@@ -5,6 +5,7 @@ services:
     image: semillerounirem/discovery-server:latest
     build:
       context: ./discovery-server
+      dockerfile: Dockerfile
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -17,6 +18,7 @@ services:
     image: semillerounirem/api-gateway:latest
     build:
       context: ./api-gateway
+      dockerfile: Dockerfile
     container_name: api-gateway
     ports:
       - "8080:8080"
@@ -29,17 +31,18 @@ services:
     networks:
       - semillero-network
 
-  auth-service:
-    image: semillerounirem/auth-service:latest
+  member-service:
+    image: semillerounirem/member-service:latest
     build:
-      context: ./auth-service
-    container_name: auth-service
+      context: ./member-service
+      dockerfile: Dockerfile
+    container_name: member-service
     ports:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-0-us-east-1.pooler.supabase.com:6543/postgres?user=postgres.qwkteerlkvrwpzdhxjeu&password=Semillero2025
-      - SPRING_DATASOURCE_USERNAME=postgres.qwkteerlkvrwpzdhxjeu
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.ixxmrynybeyvmvktnxvd&password=Semillero2025
+      - SPRING_DATASOURCE_USERNAME=postgres.ixxmrynybeyvmvktnxvd
       - SPRING_DATASOURCE_PASSWORD=Semillero2025
       - JWT_SECRET=jwtsecretkeyforuniremprojectbackend2025
       - EUREKA_URI=http://discovery-server:8761/eureka/
@@ -48,19 +51,19 @@ services:
     networks:
       - semillero-network
 
-  member-service:
-    image: semillerounirem/member-service:latest
+  news-service:
+    image: semillerounirem/news-service:latest
     build:
-      context: ./member-service
-    container_name: member-service
+      context: ./news-service
+      dockerfile: Dockerfile
+    container_name: news-service
     ports:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.sbhipmgdahsgnhslzksf&password=Semillero2025
-      - SPRING_DATASOURCE_USERNAME=postgres.sbhipmgdahsgnhslzksf
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.ixxmrynybeyvmvktnxvd&password=Semillero2025
+      - SPRING_DATASOURCE_USERNAME=postgres.ixxmrynybeyvmvktnxvd
       - SPRING_DATASOURCE_PASSWORD=Semillero2025
-      - JWT_SECRET=jwtsecretkeyforuniremprojectbackend2025
       - EUREKA_URI=http://discovery-server:8761/eureka/
     depends_on:
       - discovery-server
@@ -71,13 +74,33 @@ services:
     image: semillerounirem/projects-service:latest
     build:
       context: ./projects-service
+      dockerfile: Dockerfile
     container_name: projects-service
     ports:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.sbhipmgdahsgnhslzksf&password=Semillero2025
-      - SPRING_DATASOURCE_USERNAME=postgres.sbhipmgdahsgnhslzksf
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.ixxmrynybeyvmvktnxvd&password=Semillero2025
+      - SPRING_DATASOURCE_USERNAME=postgres.ixxmrynybeyvmvktnxvd
+      - SPRING_DATASOURCE_PASSWORD=Semillero2025
+      - EUREKA_URI=http://discovery-server:8761/eureka/
+    depends_on:
+      - discovery-server
+    networks:
+      - semillero-network
+
+  gallery-service:
+    image: semillerounirem/gallery-service:latest
+    build:
+      context: ./gallery-service
+      dockerfile: Dockerfile
+    container_name: gallery-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-us-east-2.pooler.supabase.com:6543/postgres?user=postgres.ixxmrynybeyvmvktnxvd&password=Semillero2025
+      - SPRING_DATASOURCE_USERNAME=postgres.ixxmrynybeyvmvktnxvd
       - SPRING_DATASOURCE_PASSWORD=Semillero2025
       - EUREKA_URI=http://discovery-server:8761/eureka/
     depends_on:
