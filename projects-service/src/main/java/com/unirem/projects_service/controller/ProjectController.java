@@ -17,12 +17,17 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @GetMapping("/get-all")
+    @GetMapping("/get-all-projects")
     public ResponseEntity<List<ProjectDTO>> getAllProjects() {
-        return ResponseEntity.ok(projectService.allProjects());
+        return ResponseEntity.ok(projectService.getAllProjects());
     }
 
-    @GetMapping("/get-by-id")
+    @GetMapping("/get-valid-projects")
+    public ResponseEntity<List<ProjectDTO>> getValidProjects() {
+        return ResponseEntity.ok(projectService.getValidProjects());
+    }
+
+    @GetMapping("/get-project-by-id")
     public ResponseEntity<ProjectDTO> getById(@RequestParam Long projectId) {
         return ResponseEntity.ok(projectService.getProjectById(projectId));
     }

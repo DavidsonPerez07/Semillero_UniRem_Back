@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,10 +25,9 @@ public class News {
     @Enumerated(EnumType.STRING)
     private NewsCategory category;
     @Column(nullable = false)
-    private LocalDate date;
+    private String date;
     private String imageUrl;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_id", referencedColumnName = "user_id")
+    @Column(name = "author_id")
     private Long authorId;
     private String slug;
     @Column(nullable = false)

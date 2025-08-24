@@ -3,7 +3,6 @@ package com.unirem.member_service.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unirem.member_service.DTO.*;
-import com.unirem.member_service.entity.Project;
 import com.unirem.member_service.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

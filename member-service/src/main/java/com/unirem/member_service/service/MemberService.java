@@ -74,8 +74,6 @@ public class MemberService {
         return projectToProjectDTO(project);
     }
 
-
-
     public void addUserToProject(Long projectId, Long userId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));

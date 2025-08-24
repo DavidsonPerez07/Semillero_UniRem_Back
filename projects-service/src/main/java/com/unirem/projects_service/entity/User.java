@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,12 +14,25 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Long userId;
+
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Column(nullable = false)
     private String phone;
+
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @ManyToMany(mappedBy = "researches")
-    private List<Project> projects = new ArrayList<>();
+    @Column(nullable = false)
+    private String role;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private boolean valid;
 }

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,6 +15,8 @@ public class ProjectDTO {
     private Long projectId;
     private String tittle;
     private String description;
+    private Long leaderId;
+    private List<Long> researchesIds;
     private String status;
     private String creationDate;
     private String endDate;
@@ -23,9 +24,7 @@ public class ProjectDTO {
     private String researchTopic;
     private String identifierArea;
     private String slug;
-    private Boolean isValid;
+    private Boolean valid;
     private String imageUrl;
     private String documentUrl;
-    private UserDTO leader;
-    private List<UserDTO> researches = new ArrayList<>();
 }

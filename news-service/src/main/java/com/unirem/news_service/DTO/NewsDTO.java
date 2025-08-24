@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +16,7 @@ public class NewsDTO {
     private String excerpt;
     private String content;
     private NewsCategory category;
-    private LocalDate date;
+    private String date;
     private String imageUrl;
     private Long authorId;
     private String slug;
