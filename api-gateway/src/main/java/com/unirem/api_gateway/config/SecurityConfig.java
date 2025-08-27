@@ -2,30 +2,26 @@ package com.unirem.api_gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 @Configuration
 public class SecurityConfig {
     @Bean
-    public SecurityFilterChain springSecurityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception{
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .formLogin(login -> login.disable())
-                .httpBasic(basic -> basic.disable());
-                //.authorizeExchange(exchanges -> exchanges
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authorizeExchange(exchanges -> exchanges
                         //.pathMatchers("/auth/**", "/gallery/**", "/news/**", "/projects/**",
                                 //"/member/**").permitAll()
                         //.pathMatchers("/admin/**").hasAuthority("ADMIN")
                         //.pathMatchers("/member/**").hasAuthority("MEMBER")
-                        //.anyRequest().permitAll()
-                //);
+                        .anyExchange().permitAll()
+                );
+
         return http.build();
     }
 }
