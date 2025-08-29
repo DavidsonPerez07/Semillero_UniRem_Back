@@ -43,6 +43,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=Semillero2025
       - JWT_SECRET=jwtsecretkeyforuniremprojectbackend2025
       - EUREKA_URI=http://discovery-server:8761/eureka/
+      - FILE_UPLOAD_DIR=/app/uploads
+    volumes:
+      - ./uploads:/app/uploads
     depends_on:
       - discovery-server
     networks:
