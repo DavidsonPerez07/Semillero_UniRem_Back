@@ -16,7 +16,7 @@ public class ProjectDTO {
     private String tittle;
     private String description;
     private Long leaderId;
-    private List<Long> researcherIds;
+    private List<Long> researchesIds;
     private String status;
     private String creationDate;
     private String endDate;

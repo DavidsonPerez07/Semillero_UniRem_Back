@@ -9,7 +9,6 @@ import com.unirem.member_service.repository.GalleryImageRepository;
 import com.unirem.member_service.repository.NewsRepository;
 import com.unirem.member_service.repository.ProjectRepository;
 import com.unirem.member_service.repository.UserRepository;
-import com.unirem.member_service.service.FileStorageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,7 @@ public class MemberService {
 
         // solo guardamos IDs
         project.setLeaderId(request.getLeaderId());
-        project.setResearcherIds(request.getResearchesIds());
+        project.setResearchesIds(request.getResearchesIds());
 
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
@@ -71,7 +70,12 @@ public class MemberService {
             project.setDocumentUrl(fileStorageService.saveFile(document, PROJECT_DOC_DIR));
         }
 
-        project = projectRepository.save(project);
+        try {
+            project = projectRepository.save(project);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error saving project: " + e.getMessage());
+        }
 
         return projectToProjectDTO(project);
     }
@@ -80,8 +84,8 @@ public class MemberService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        if (!project.getResearcherIds().contains(userId)) {
-            project.getResearcherIds().add(userId);
+        if (!project.getResearchesIds().contains(userId)) {
+            project.getResearchesIds().add(userId);
             projectRepository.save(project);
         }
     }
@@ -117,7 +121,7 @@ public class MemberService {
 
         // solo guardamos IDs
         project.setLeaderId(request.getLeaderId());
-        project.setResearcherIds(request.getResearchesIds());
+        project.setResearchesIds(request.getResearchesIds());
 
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
