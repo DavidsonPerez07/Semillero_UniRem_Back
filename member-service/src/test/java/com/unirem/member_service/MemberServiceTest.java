@@ -65,7 +65,7 @@ public class MemberServiceTest {
         project.setProjectId(1L);
         project.setTittle("Software Architecture");
         project.setValid(false);
-        project.setResearchesIds(new ArrayList<>());
+        project.setResearcherIds(new ArrayList<>());
 
         news = new News();
         news.setNewId(1L);
@@ -149,7 +149,7 @@ public class MemberServiceTest {
     void addUserToProject() {
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
         memberService.addUserToProject(1L, 5L);
-        assertTrue(project.getResearchesIds().contains(5L));
+        assertTrue(project.getResearcherIds().contains(5L));
         verify(projectRepository).save(project);
     }
 
