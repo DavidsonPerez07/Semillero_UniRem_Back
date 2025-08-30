@@ -50,11 +50,8 @@ public class MemberService {
 
         // solo guardamos IDs
         project.setLeaderId(request.getLeaderId());
-<<<<<<< HEAD
         project.setResearcherIds(request.getResearcherIds());
-=======
-        project.setResearchesIds(request.getResearchesIds());
->>>>>>> origin/main
+
 
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
@@ -88,8 +85,8 @@ public class MemberService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        if (!project.getResearchesIds().contains(userId)) {
-            project.getResearchesIds().add(userId);
+        if (!project.getResearcherIds().contains(userId)) {
+            project.getResearcherIds().add(userId);
             projectRepository.save(project);
         }
     }
@@ -125,11 +122,7 @@ public class MemberService {
 
         // solo guardamos IDs
         project.setLeaderId(request.getLeaderId());
-<<<<<<< HEAD
         project.getResearcherIds().addAll(request.getResearcherIds());
-=======
-        project.setResearchesIds(request.getResearchesIds());
->>>>>>> origin/main
 
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
