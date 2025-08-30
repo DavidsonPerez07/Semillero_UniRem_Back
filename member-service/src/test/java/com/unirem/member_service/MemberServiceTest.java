@@ -83,7 +83,7 @@ public class MemberServiceTest {
         ProjectRequest request = new ProjectRequest();
         request.setTittle("Software Architecture");
         request.setLeaderId(1L);
-        request.setResearchesIds(List.of(2L));
+        request.setResearcherIds(List.of(2L));
         request.setSlug("sw-arq");
 
         MockMultipartFile image = new MockMultipartFile("img", "test.png", "image/png", "img".getBytes());

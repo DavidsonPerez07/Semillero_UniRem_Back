@@ -51,7 +51,7 @@ public class MemberService {
 
         // solo guardamos IDs
         project.setLeaderId(request.getLeaderId());
-        project.setResearcherIds(request.getResearchesIds());
+        project.setResearcherIds(request.getResearcherIds());
 
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
@@ -117,7 +117,7 @@ public class MemberService {
 
         // solo guardamos IDs
         project.setLeaderId(request.getLeaderId());
-        project.setResearcherIds(request.getResearchesIds());
+        project.getResearcherIds().addAll(request.getResearcherIds());
 
         project.setStatus(request.getStatus());
         project.setCreationDate(request.getCreationDate());
