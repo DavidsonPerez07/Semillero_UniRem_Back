@@ -36,7 +36,7 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id")
     )
     @Column(name = "researcher_id")
-    private List<Long> researcherIds = new ArrayList<>();
+    private List<Long> researchesIds = new ArrayList<>();
 
     @Column(nullable = false)
     private String status;
